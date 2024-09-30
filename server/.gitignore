@@ -38,6 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
-/docker/postgres-data/
-/docker/mongo/
+/server/docker/postgres-data
+/server/docker/mongo
 /ui/*.tsbuildinfo
