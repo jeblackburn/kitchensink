@@ -3,10 +3,12 @@ package com.jeb.kitchensink.controller
 import com.jeb.kitchensink.model.Member
 import com.jeb.kitchensink.repository.MemberRepository
 import jakarta.validation.Valid
+import org.springframework.context.annotation.Profile
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @Validated
+@Profile("jpa")
 @RestController
 class MemberController(val repository: MemberRepository){
 
