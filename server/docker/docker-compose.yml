@@ -9,11 +9,14 @@ services:
       POSTGRES_DB: kitchensink
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-  rabbitmq:
-    image: arm64v8/rabbitmq
+  mongo:
+    image: arm64v8/mongo
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "27017:27017"
     environment:
-      RABBITMQ_DEFAULT_USER: rabbituser
-      RABBITMQ_DEFAULT_PASS: rabbitpw
+      - MONGO_INITDB_ROOT_USERNAME=mongouser
+      - MONGO_INITDB_ROOT_PASSWORD=mongopw
+    volumes:
+      - type: bind
+        source: ./mongo/data
+        target: /Users/jon/workspace/personal/kitchensink/server/docker/mongo/db

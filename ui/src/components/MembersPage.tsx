@@ -1,39 +1,44 @@
 import { useEffect, useState } from 'react'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Paper from '@mui/material/Paper'
 import Member from '../members/member.ts'
-
-const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 230 },
-  { field: 'email', headerName: 'Email Address', width: 230 },
-  { field: 'phoneNumber', headerName: 'Phone Number', width: 1200 },
-]
-
-const paginationModel = { page: 0, pageSize: 5 }
+import MembersList from './MembersList.tsx'
+import { Button } from '@mui/material'
+import AddMember from './AddMember.tsx'
 
 export default function MembersPage() {
   const [currentMembersList, setCurrentMembersList] = useState<Member[]>([])
+  const [showMemberPopup, setShowMemberPopup] = useState(false)
+
+  function sendNewMember(name: string, email: string, phone: string) {
+    fetch("/api/members", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, phoneNumber: phone })
+    }).catch((err) => {
+      console.log("OH NO", err)})
+    setShowMemberPopup(false);
+  }
 
   useEffect(() => {
-    fetch('/api/members')
-      .then(response => response.json())
-      .then(data => {
-        console.log('got some data', data)
-        const members = data['_embedded']['members'] as Member[]
-        setCurrentMembersList(members)
-      });
-  }, [])
+    if (!showMemberPopup) {
+      fetch('/api/members')
+        .then(response => response.json())
+        .then(data => {
+          console.log('got some data', data)
+          const members = data['_embedded']['members'] as Member[]
+          setCurrentMembersList(members)
+        });
+    }
+  }, [showMemberPopup])
 
   return (
     <Paper sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={currentMembersList}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        sx={{ border: 0 }}
-      />
+      <MembersList currentMembersList={currentMembersList}/>
+      {showMemberPopup && <AddMember submitNewMember={sendNewMember} onCancel={() => setShowMemberPopup(false)}/>}
+      <Button onClick={() => setShowMemberPopup(true)}>Add a Member</Button>
     </Paper>
   )
 

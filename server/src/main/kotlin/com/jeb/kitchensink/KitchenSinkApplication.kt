@@ -1,6 +1,7 @@
 package com.jeb.kitchensink
 
 import com.jeb.kitchensink.model.Member
+import jakarta.validation.Validator
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -21,8 +22,6 @@ class KitchenSinkApplication {
 			)
 		}
 	}
-
-
 }
 
 @Configuration
